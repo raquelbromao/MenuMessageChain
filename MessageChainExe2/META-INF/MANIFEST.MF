@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MessageChainExe2
+Bundle-SymbolicName: MessageChainExe2;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: messagechainexe2.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.jdt;bundle-version="3.11.2",
+ org.eclipse.jdt.core;bundle-version="3.4.4",
+ org.eclipse.core.resources;bundle-version="3.4.2",
+ org.eclipse.jdt.ui;bundle-version="3.4.2"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy

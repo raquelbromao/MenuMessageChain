@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="MessageChainExe2.category1"
+            id="MessageChainExe2.command1"
+            name="DialogMC">
+      </command>
+      <category
+            id="MessageChainExe2.category1"
+            name="DialogMC Category">
+      </category>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="messagechainexe2.DialogMC"
+            commandId="MessageChainExe2.command1">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="MessageChainExe2.command1"
+            contextId="org.eclipse.ui.contexts.window"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="M1+1">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               id="MessageChainExe2.menus.sampleMenu"
+               label="Sample Menu"
+               mnemonic="M">
+            <command
+                  commandId="MessageChainExe2.commands.sampleCommand"
+                  id="MessageChainExe2.menus.sampleCommand"
+                  mnemonic="S">
+            </command>
+            <command
+                  commandId="MessageChainExe2.command1"
+                  id="MessageChainExe2.menus.command1"
+                  style="push">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="MessageChainExe2.toolbars.sampleToolbar">
+            <command
+                  commandId="MessageChainExe2.commands.sampleCommand"
+                  icon="icons/sample.gif"
+                  id="MessageChainExe2.toolbars.sampleCommand"
+                  tooltip="Say hello world">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+
+</plugin>
