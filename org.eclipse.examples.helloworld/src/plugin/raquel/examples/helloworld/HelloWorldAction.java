@@ -126,7 +126,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		
 		btnClear.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				results.setText(null);
+				results.setText("");
 			}
 		});
 	}
