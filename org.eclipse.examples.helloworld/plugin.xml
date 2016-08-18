@@ -31,7 +31,7 @@
 		label="Hello World"
 		tooltip="Press to see a message"
 		icon="icons/helloworld.gif"
-		class="org.eclipse.examples.helloworld.HelloWorldAction"/>
+		class="plugin.raquel.examples.helloworld.HelloWorldAction"/>
         </actionSet>
     </extension>
 </plugin>

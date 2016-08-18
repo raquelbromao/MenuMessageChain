@@ -1,4 +1,4 @@
-package org.eclipse.examples.helloworld;
+package plugin.raquel.examples.helloworld;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
