@@ -117,7 +117,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 				// DO PROJETO " + mypackage.getElementName());
 				// createASTmethod(mypackage);
 				if (mypackage.getElementName() != null) {
-					System.out.println("####### INFORMAÇÕES DO EXPRESSION STATEMENT DO PROJETO "
+					results.append("####### INFORMAÇÕES DO EXPRESSION STATEMENT DO PROJETO "
 							+ mypackage.getElementName() + " ########\n");
 				}
 				createASTInvocation(mypackage);
