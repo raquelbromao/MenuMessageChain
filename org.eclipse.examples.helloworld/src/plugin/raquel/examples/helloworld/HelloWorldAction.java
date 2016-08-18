@@ -82,7 +82,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		// proxyAction has UI information from manifest file (ignored)
 		Shell shell = activeWindow.getShell();
 		shlSplMetricsSelect = new Shell();
-		shlSplMetricsSelect.setSize(450, 300);
+		shlSplMetricsSelect.setSize(547, 446);
 		shlSplMetricsSelect.setText("Message Chain");
 		shlSplMetricsSelect.setLayout(null);
 		
@@ -96,15 +96,21 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		
 		Button btnApply = new Button(shlSplMetricsSelect, SWT.NONE);
 		btnApply.setSelection(true);
-		btnApply.setBounds(25, 214, 75, 25);
+		btnApply.setBounds(456, 36, 75, 25);
 		btnApply.setText("Apply");
 		
 		Button btnCancel = new Button(shlSplMetricsSelect, SWT.NONE);
-		btnCancel.setBounds(106, 214, 75, 25);
+		btnCancel.setBounds(456, 64, 75, 25);
 		btnCancel.setText("Cancel");
 		shlSplMetricsSelect.pack();
 		shlSplMetricsSelect.open();
 
+		Button btnClear = new Button(shlSplMetricsSelect, SWT.NONE);
+		btnClear.setBounds(456, 93, 75, 25);
+		btnClear.setText("Clear");
+		shlSplMetricsSelect.pack();
+		shlSplMetricsSelect.open();
+		
 		btnApply.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				execute();
@@ -115,6 +121,12 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 			public void widgetSelected(SelectionEvent event) {
 				shlSplMetricsSelect.close();
 				dispose();
+			}
+		});
+		
+		btnClear.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				results.setText(null);
 			}
 		});
 	}
