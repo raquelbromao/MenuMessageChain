@@ -48,7 +48,7 @@ public class Teste2 extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(450, 300);
+		shell.setSize(547, 446);
 		shell.setText(getText());
 		shell.setLayout(null);
 		
@@ -57,7 +57,7 @@ public class Teste2 extends Dialog {
 		lblTexto.setText("New Label");
 		
 		results = new Text(shell, SWT.BORDER);
-		results.setBounds(25, 38, 394, 156);
+		results.setBounds(25, 38, 425, 369);
 		
 		Button btnNewButton = new Button(shell, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
@@ -65,12 +65,16 @@ public class Teste2 extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 			}
 		});
-		btnNewButton.setBounds(25, 214, 75, 25);
-		btnNewButton.setText("New Button");
+		btnNewButton.setBounds(456, 36, 75, 25);
+		btnNewButton.setText("Apply");
 		
 		Button btnNewButton_1 = new Button(shell, SWT.NONE);
-		btnNewButton_1.setBounds(106, 214, 75, 25);
-		btnNewButton_1.setText("New Button");
+		btnNewButton_1.setBounds(456, 64, 75, 25);
+		btnNewButton_1.setText("Cancel");
+		
+		Button btnNewButton_2 = new Button(shell, SWT.NONE);
+		btnNewButton_2.setBounds(456, 93, 75, 25);
+		btnNewButton_2.setText("Clear");
 
 	}
 }
