@@ -62,7 +62,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 			System.out.println("Método[" + i + "]: " + aux[i] + "\n");
 		}
 		
-		results.append("________________________________________________________________________________");
+		results.append("_______________________________________________________");
 	}
 
 	public static void verificaMessageChain(String s) {
