@@ -80,7 +80,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	 */		
 	public void run(IAction proxyAction) {
 		// proxyAction has UI information from manifest file (ignored)
-		Shell shell = activeWindow.getShell();
+		//Shell shell = activeWindow.getShell();
 		shlMessageChain = new Shell();
 		shlMessageChain.setSize(547, 446);
 		shlMessageChain.setText("Message Chain");
