@@ -169,7 +169,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		// proxyAction has UI information from manifest file (ignored)
 		//Shell shell = activeWindow.getShell();
 		shlMessageChain = new Shell();
-		shlMessageChain.setSize(547, 446);
+		shlMessageChain.setSize(547, 500);
 		shlMessageChain.setText("Message Chain");
 		shlMessageChain.setLayout(null);
 		
@@ -179,7 +179,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		lblPleaseSelectThe.setText("Message Chain: all methods in workspace!");
 		
 		results = new Text(shlMessageChain, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		results.setBounds(25, 38, 394, 156);
+		results.setBounds(25, 38, 425, 400);
 		
 		Button btnApply = new Button(shlMessageChain, SWT.NONE);
 		btnApply.setSelection(true);
