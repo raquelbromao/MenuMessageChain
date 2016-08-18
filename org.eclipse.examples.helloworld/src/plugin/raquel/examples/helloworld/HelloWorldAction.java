@@ -29,6 +29,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -178,22 +179,25 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		lblPleaseSelectThe.setBounds(25, 10, 394, 15);
 		lblPleaseSelectThe.setText("Message Chain: all methods in workspace!");
 		
-		results = new Text(shlMessageChain, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		results.setBounds(25, 38, 425, 400);
+		Combo combo = new Combo(shlMessageChain, SWT.NONE);
+		combo.setBounds(25, 46, 425, 23);
 		
 		Button btnApply = new Button(shlMessageChain, SWT.NONE);
 		btnApply.setSelection(true);
-		btnApply.setBounds(456, 36, 75, 25);
+		btnApply.setBounds(456, 44, 75, 25);
 		btnApply.setText("Apply");
 		
+		results = new Text(shlMessageChain, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		results.setBounds(25, 95, 425, 369);		
+		
 		Button btnCancel = new Button(shlMessageChain, SWT.NONE);
-		btnCancel.setBounds(456, 64, 75, 25);
+		btnCancel.setBounds(456, 93, 75, 255);
 		btnCancel.setText("Cancel");
 		shlMessageChain.pack();
 		shlMessageChain.open();
 
 		Button btnClear = new Button(shlMessageChain, SWT.NONE);
-		btnClear.setBounds(456, 93, 75, 25);
+		btnClear.setBounds(456, 124, 75, 25);
 		btnClear.setText("Clear");
 		shlMessageChain.pack();
 		shlMessageChain.open();
