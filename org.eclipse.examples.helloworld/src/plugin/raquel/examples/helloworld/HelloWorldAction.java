@@ -45,6 +45,14 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 
 	private static final String JDT_NATURE = "org.eclipse.jdt.core.javanature";
 	// private StructuralPropertyDescriptor property;
+	
+	/**
+	 * Lista os projetos da Workspace em utilização
+	 */
+	public IProject[] getProjects() {
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		return projects;
+	}
 
 	public static void splitMessageChain(String s) {
 		// retira o ";" do final da string
@@ -182,6 +190,12 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		Combo combo = new Combo(shlMessageChain, SWT.NONE);
 		combo.setBounds(25, 46, 425, 23);
 		
+		// Gets all projects from workspace
+		IProject[] projects = getProjects();
+		for (int i = 0; i < projects.length; i++) {
+			combo.add(projects[i].getName());
+		}
+
 		Button btnApply = new Button(shlMessageChain, SWT.NONE);
 		btnApply.setSelection(true);
 		btnApply.setBounds(456, 44, 75, 25);
@@ -191,7 +205,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		results.setBounds(25, 95, 425, 369);		
 		
 		Button btnCancel = new Button(shlMessageChain, SWT.NONE);
-		btnCancel.setBounds(456, 93, 75, 255);
+		btnCancel.setBounds(456, 93, 75, 25);
 		btnCancel.setText("Cancel");
 		shlMessageChain.pack();
 		shlMessageChain.open();
