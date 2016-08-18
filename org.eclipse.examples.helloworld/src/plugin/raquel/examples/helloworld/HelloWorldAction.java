@@ -3,6 +3,9 @@ package plugin.raquel.examples.helloworld;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.wb.swt.SWTResourceManager;
+
+import java.util.regex.Pattern;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
@@ -20,8 +23,59 @@ import org.eclipse.swt.widgets.Text;
 public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	IWorkbenchWindow activeWindow = null;
 	public Shell shlSplMetricsSelect;
-	private Text results;
+	private static Text results;
 
+	public static final String[] testeErro = {"objeto", ".objeto", "objeto.", "objeto;",
+			"objeto.function", "objeto.function;", ";objeto.function", "objeto.;function", "objeto;.function",
+			"objeto()", ".objeto()", "objeto.()", "objeto().",
+			"objeto().function", "objeto.()function","()objeto.function",
+			"objeto.function()","objeto.function().", 
+			"a.somadiferente().subdiferente().multdiferente().raizdiferente()",
+			"objeto.function().function2", "objeto.function().function2.", "objeto.function().function2.;"};
+	
+	public static final String[] testeValido = {"objeto.function().function2();",
+			"objeto.function().function2().function3();",
+			"objeto.function().function2().function3().function4();", 
+			"objeto.function().function2().function3().function4().function5();",
+			"a.somadiferente().subdiferente().multdiferente().raizdiferente();"};
+	
+	public static void splitMessageChain (String s) {
+		// retira o ";" do final da string		
+		s = s.replace(";", " ");
+		
+		// Quebra a variável quando acha . e armazena a sobra numa posição do array aux
+		// a().b() -> . é descartando e a() fica em aux[0] e b() em aux[1]
+		String[] aux = s.split(Pattern.quote("."));		
+
+		// Pega o tamanho da string aux
+		// Imprime a variável aux na tela
+		results.append("Objeto: " + aux[0]);	
+		for (int i = 1; i < aux.length; i++) {
+			results.append("Método[" + i + "]: " + aux[i]);
+		}		
+	}
+	
+	public static void verificaMessageChain (String s) {		
+		if (s!=null && s.matches("[\\w]+([\\.]+[\\w]+[(]+[)]){2,}+[;]")) {
+			results.append("\nÉ Message Chain para "+s+"\n");
+			splitMessageChain(s);
+		} else {
+			results.append("\nNão é Message Chain para "+s+"\n");
+		}
+	}
+	
+	public static void testaStrings (String[] s) {
+		for (int i = 0; i<s.length; i++) {
+			verificaMessageChain(s[i]);
+		}
+	}
+
+	public static void execute() {
+		testaStrings(testeErro);		
+		results.append("\n#####################################################\n");
+		testaStrings(testeValido);
+	}
+	
 	/** Run the action. Display the Hello World message
 	 */		
 	public void run(IAction proxyAction) {
@@ -53,8 +107,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 
 		btnApply.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				results.setText("Teste/ OLAR/ BRUSINHA");
-				//inserir resposta dos algoritmos
+				execute();
 			}
 		});
 
