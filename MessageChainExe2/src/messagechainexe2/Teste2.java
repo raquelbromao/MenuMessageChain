@@ -48,7 +48,7 @@ public class Teste2 extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(547, 446);
+		shell.setSize(557, 500);
 		shell.setText(getText());
 		shell.setLayout(null);
 		
