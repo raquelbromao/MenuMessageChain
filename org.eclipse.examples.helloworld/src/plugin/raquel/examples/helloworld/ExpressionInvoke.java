@@ -1,4 +1,4 @@
-package de.vogella.jdt.astsimple.handlers;
+package plugin.raquel.examples.helloworld;
 
 import java.util.ArrayList;
 import java.util.List;
