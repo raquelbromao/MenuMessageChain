@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Text;
  */
 public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	IWorkbenchWindow activeWindow = null;
-	public Shell shlSplMetricsSelect;
+	public Shell shlMessageChain;
 	private static Text results;
 
 	public static final String[] testeErro = {"objeto", ".objeto", "objeto.", "objeto;",
@@ -81,35 +81,35 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	public void run(IAction proxyAction) {
 		// proxyAction has UI information from manifest file (ignored)
 		Shell shell = activeWindow.getShell();
-		shlSplMetricsSelect = new Shell();
-		shlSplMetricsSelect.setSize(547, 446);
-		shlSplMetricsSelect.setText("Message Chain");
-		shlSplMetricsSelect.setLayout(null);
+		shlMessageChain = new Shell();
+		shlMessageChain.setSize(547, 446);
+		shlMessageChain.setText("Message Chain");
+		shlMessageChain.setLayout(null);
 		
-		Label lblPleaseSelectThe = new Label(shlSplMetricsSelect, SWT.NONE);
+		Label lblPleaseSelectThe = new Label(shlMessageChain, SWT.NONE);
 		lblPleaseSelectThe.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
 		lblPleaseSelectThe.setBounds(25, 10, 394, 15);
 		lblPleaseSelectThe.setText("Message Chain: all methods in workspace!");
 		
-		results = new Text(shlSplMetricsSelect, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		results = new Text(shlMessageChain, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		results.setBounds(25, 38, 394, 156);
 		
-		Button btnApply = new Button(shlSplMetricsSelect, SWT.NONE);
+		Button btnApply = new Button(shlMessageChain, SWT.NONE);
 		btnApply.setSelection(true);
 		btnApply.setBounds(456, 36, 75, 25);
 		btnApply.setText("Apply");
 		
-		Button btnCancel = new Button(shlSplMetricsSelect, SWT.NONE);
+		Button btnCancel = new Button(shlMessageChain, SWT.NONE);
 		btnCancel.setBounds(456, 64, 75, 25);
 		btnCancel.setText("Cancel");
-		shlSplMetricsSelect.pack();
-		shlSplMetricsSelect.open();
+		shlMessageChain.pack();
+		shlMessageChain.open();
 
-		Button btnClear = new Button(shlSplMetricsSelect, SWT.NONE);
+		Button btnClear = new Button(shlMessageChain, SWT.NONE);
 		btnClear.setBounds(456, 93, 75, 25);
 		btnClear.setText("Clear");
-		shlSplMetricsSelect.pack();
-		shlSplMetricsSelect.open();
+		shlMessageChain.pack();
+		shlMessageChain.open();
 		
 		btnApply.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
@@ -119,7 +119,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				shlSplMetricsSelect.close();
+				shlMessageChain.close();
 				dispose();
 			}
 		});
