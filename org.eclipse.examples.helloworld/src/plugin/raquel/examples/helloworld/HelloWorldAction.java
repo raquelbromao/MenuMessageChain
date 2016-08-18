@@ -49,9 +49,9 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 
 		// Pega o tamanho da string aux
 		// Imprime a variável aux na tela
-		results.append("Objeto: " + aux[0]);	
+		results.append("\nObjeto: " + aux[0]+"\n");	
 		for (int i = 1; i < aux.length; i++) {
-			results.append("Método[" + i + "]: " + aux[i]);
+			results.append("Método[" + i + "]: " + aux[i]+"\n");
 		}		
 	}
 	
@@ -91,7 +91,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		lblPleaseSelectThe.setBounds(25, 10, 394, 15);
 		lblPleaseSelectThe.setText("Message Chain: all methods in workspace!");
 		
-		results = new Text(shlSplMetricsSelect, SWT.BORDER);
+		results = new Text(shlSplMetricsSelect, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		results.setBounds(25, 38, 394, 156);
 		
 		Button btnApply = new Button(shlSplMetricsSelect, SWT.NONE);
