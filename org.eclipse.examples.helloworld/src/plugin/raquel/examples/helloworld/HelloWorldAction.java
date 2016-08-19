@@ -6,7 +6,6 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import plugin.raquel.examples.helloworld.ExpressionInvoke;
 
-import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
@@ -14,9 +13,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
@@ -58,23 +55,18 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	 * Lista todas as classes do projeto selecionado
 	 * 
 	 * @param project
+	 * @return 
 	 * @return
 	 */
-	public IClassFile[] getAllClass(IProject projectAtual) {
-		 ArrayList<Class<?>> classList = new ArrayList<Class<?>>();
-		
-		for (IProject projects : projectAtual) {
-			IJavaProject javaProject = JavaCore.create(projects);
-			IPackageFragment[] packages = javaProject.getPackageFragments();
-
-			for (IPackageFragment myPackage : packages) {
-				IClassFile[] classes = myPackage.getClassFiles();
-				for (IClassFile myClass : classes) {
-					classList.add(myClass.getClass());
-				}
+	private void getAllClasses(IProject p) throws JavaModelException {
+		IPackageFragment[] packages = JavaCore.create(p).getPackageFragments();
+		// parse(JavaCore.create(project));
+		for (IPackageFragment mypackage : packages) {
+			for (final ICompilationUnit compilationUnit : mypackage.getCompilationUnits()) {
+			       results.append("## PACKAGE NAME: " + mypackage.getElementName() + "\n");
+			       results.append("## COMPILATION UNIT NAME: " + compilationUnit.getElementName() + "\n");
 			}
 		}
-		return null;
 	}
 
 	public static void splitMessageChain(String s) {
@@ -107,7 +99,6 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 			// System.out.println("Não é Message Chain: " + s + "\n");
 		}
 	}
-
 
 	/*
 	 * private void analyseClass (IProject project) { //IProject class = root. }
@@ -188,6 +179,13 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 
 		Combo comboClasses = new Combo(shlMessageChain, SWT.NONE);
 		comboClasses.setBounds(25, 56, 425, 23);
+		
+		// Get all classes from project
+		for () {
+			
+		}
+		
+		comboClasses.select(0);
 
 		Button applyClass = new Button(shlMessageChain, SWT.NONE);
 		applyClass.setBounds(456, 56, 75, 25);
@@ -221,8 +219,8 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 					results.append("## PATH OF PROJECT: " + projectNew.getFullPath() + "\n");
 					projectNew.open(null);
 
-					// Gets all classes of project
-					// IClassFile[] classes = getAllClass(projectNew);
+					// Gera a lista de todas as classes do projeto selecionado
+					getAllClasses(projectNew);
 
 					// Chama a função para a análise do projeto
 					analyseMethods(projectNew);
