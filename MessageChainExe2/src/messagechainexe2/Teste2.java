@@ -58,17 +58,24 @@ public class Teste2 extends Dialog {
 		lblTexto.setBounds(25, 10, 394, 25);
 		lblTexto.setText("New Label");
 		
-		Combo combo = new Combo(shell, SWT.NONE);
-		combo.setBounds(25, 46, 425, 23);
+		Combo comboProjects = new Combo(shell, SWT.NONE);
+		comboProjects.setBounds(25, 27, 425, 23);
 		
-		Button btnNewButton = new Button(shell, SWT.NONE);
-		btnNewButton.addSelectionListener(new SelectionAdapter() {
+		Button applyProjects = new Button(shell, SWT.NONE);
+		applyProjects.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 			}
 		});
-		btnNewButton.setBounds(456, 44, 75, 25);
-		btnNewButton.setText("Apply");
+		applyProjects.setBounds(456, 25, 75, 25);
+		applyProjects.setText("Apply");
+		
+		Combo comboClasses = new Combo(shell, SWT.NONE);
+		comboClasses.setBounds(25, 56, 425, 23);
+		
+		Button applyClass = new Button(shell, SWT.NONE);
+		applyClass.setBounds(456, 56, 75, 25);
+		applyClass.setText("Apply");
 		
 		results = new Text(shell, SWT.BORDER);
 		results.setBounds(25, 95, 425, 369);
