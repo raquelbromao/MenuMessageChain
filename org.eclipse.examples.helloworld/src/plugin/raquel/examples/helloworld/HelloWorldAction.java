@@ -44,7 +44,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	public Shell shlMessageChain;
 	private static Text results;
 
-	private static final String JDT_NATURE = "org.eclipse.jdt.core.javanature";
+	//private static final String JDT_NATURE = "org.eclipse.jdt.core.javanature";
 	// private StructuralPropertyDescriptor property;
 
 	/**
@@ -79,7 +79,6 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		results.append("Objeto: " + aux[0] + "\n");
 		for (int i = 1; i < aux.length; i++) {
 			results.append("Método[" + i + "]: " + aux[i] + "\n");
-			System.out.println("Método[" + i + "]: " + aux[i] + "\n");
 		}
 
 		results.append("_______________________________________________________");
@@ -122,7 +121,6 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	 * private void analyseClass (IProject project) { //IProject class = root. }
 	 * 
 	 */
-
 	private void analyseMethods(IProject project) throws JavaModelException {
 		IPackageFragment[] packages = JavaCore.create(project).getPackageFragments();
 		// parse(JavaCore.create(project));
@@ -131,10 +129,10 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 				// System.out.println("####### INFORMAÇÕES DO METHOD DECLARATION
 				// DO PROJETO " + mypackage.getElementName());
 				// createASTmethod(mypackage);
-				if (mypackage.getElementName() != null) {
+				/*if (mypackage.getElementName() != null) {
 					results.append("####### INFORMAÇÕES DO EXPRESSION STATEMENT DO PROJETO "
 							+ mypackage.getElementName() + " ########\n");
-				}
+				}*/
 				createASTInvocation(mypackage);
 			}
 		}
@@ -236,8 +234,8 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 
 					// Pega a raiz do projeto selecionado pelo usuário
 					IProject projectNew = root.getProject(name);
-					results.append("Name of project: " + projectNew.getName() + "\n");
-					results.append("Full Path of project: " + projectNew.getFullPath() + "\n");
+					results.append("## NAME OF PROJECT: " + projectNew.getName() + "\n");
+					results.append("## PATH OF PROJECT: " + projectNew.getFullPath() + "\n");
 					projectNew.open(null);
 
 					// Chama a função para a análise do projeto
