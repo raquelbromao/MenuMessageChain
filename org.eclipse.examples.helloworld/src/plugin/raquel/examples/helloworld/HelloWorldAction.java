@@ -8,12 +8,12 @@ import plugin.raquel.examples.helloworld.ExpressionInvoke;
 
 import java.util.regex.Pattern;
 
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -34,9 +34,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-/** HelloWorldAction is a simple example of using an
- * action set to extend the Eclipse Workbench with a menu 
- * and toolbar action that prints the "Hello World" message.
+/**
+ * HelloWorldAction is a simple example of using an action set to extend the
+ * Eclipse Workbench with a menu and toolbar action that prints the "Hello
+ * World" message.
  */
 public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	IWorkbenchWindow activeWindow = null;
@@ -45,13 +46,23 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 
 	private static final String JDT_NATURE = "org.eclipse.jdt.core.javanature";
 	// private StructuralPropertyDescriptor property;
-	
+
 	/**
 	 * Lista os projetos da Workspace em utilização
 	 */
-	public IProject[] getProjects() {
+	public IProject[] getAllProjects() {
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		return projects;
+	}
+
+	/**
+	 * Lista todas as classes do projeto selecionado
+	 * 
+	 * @param project
+	 * @return
+	 */
+	public IClassFile[] getAllClass(IProject project) {
+		return null;
 	}
 
 	public static void splitMessageChain(String s) {
@@ -70,13 +81,14 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 			results.append("Método[" + i + "]: " + aux[i] + "\n");
 			System.out.println("Método[" + i + "]: " + aux[i] + "\n");
 		}
-		
+
 		results.append("_______________________________________________________");
 	}
 
 	public static void verificaMessageChain(String s) {
 		// verifica se a expressão coletada é igual ao regex criado
-		// não foi usado [;] no final do regex pq o compilador nem lê se não houver ele no final
+		// não foi usado [;] no final do regex pq o compilador nem lê se não
+		// houver ele no final
 		if (s.matches("[\\w]+([\\.]+[\\w]+[(]+[)]){2,}")) {
 			results.append("\nMessage Chain: " + s + "\n");
 			splitMessageChain(s);
@@ -85,13 +97,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		}
 	}
 
-	/*public static void testaStrings(String[] s) {
-		for (int i = 0; i < s.length; i++) {
-			verificaMessageChain(s[i]);
-		}
-	}*/
-
-	public Object execute() throws ExecutionException {
+	/*public Object execute() throws ExecutionException {
 
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
@@ -110,7 +116,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 			}
 		}
 		return null;
-	}
+	} */
 
 	/*
 	 * private void analyseClass (IProject project) { //IProject class = root. }
@@ -134,8 +140,9 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		}
 	}
 
-
 	private void createASTInvocation(IPackageFragment mypackage) throws JavaModelException {
+		// mypackage.getClassFiles();
+
 		for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
 			// now create the AST for the ICompilationUnits
 			CompilationUnit parse = parse(unit);
@@ -144,11 +151,12 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 
 			// Imprime na tela o nome do método e o tipo de retorno
 			for (ExpressionStatement method : visitor.getMethods()) {
-				//System.out.println("\n\nNAME: " + method.getExpression());
-				//System.out.println("PARENT: " + method.getParent());
-				//System.out.println("ARGUMENTS: " + method.arguments());
+				// System.out.println("\n\nNAME: " + method.getExpression());
+				// System.out.println("PARENT: " + method.getParent());
+				// System.out.println("ARGUMENTS: " + method.arguments());
 
-				// Converter o method.getParent() em string e avalia se é Message Chain
+				// Converter o method.getParent() em string e avalia se é
+				// Message Chain
 				String t = null;
 				t = method.getExpression().toString();
 
@@ -171,56 +179,70 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		parser.setResolveBindings(true);
 		return (CompilationUnit) parser.createAST(null); // parse
 	}
-	
-	/** Run the action. Display the Hello World message
-	 */		
+
+	/**
+	 * Run the action. Display the Hello World message
+	 */
 	public void run(IAction proxyAction) {
 		// proxyAction has UI information from manifest file (ignored)
-		//Shell shell = activeWindow.getShell();
+		// Shell shell = activeWindow.getShell();
 		shlMessageChain = new Shell();
 		shlMessageChain.setSize(547, 500);
 		shlMessageChain.setText("Message Chain");
 		shlMessageChain.setLayout(null);
-		
+
 		Label lblPleaseSelectThe = new Label(shlMessageChain, SWT.NONE);
 		lblPleaseSelectThe.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
 		lblPleaseSelectThe.setBounds(25, 10, 394, 15);
 		lblPleaseSelectThe.setText("Message Chain: all methods in workspace!");
-		
+
 		Combo combo = new Combo(shlMessageChain, SWT.NONE);
 		combo.setBounds(25, 46, 425, 23);
-		
+
 		// Gets all projects from workspace
-		IProject[] projects = getProjects();
+		IProject[] projects = getAllProjects();
 		for (int i = 0; i < projects.length; i++) {
 			combo.add(projects[i].getName());
 		}
+
+		combo.select(0);
 
 		Button btnApply = new Button(shlMessageChain, SWT.NONE);
 		btnApply.setSelection(true);
 		btnApply.setBounds(456, 44, 75, 25);
 		btnApply.setText("Apply");
-		
+
 		results = new Text(shlMessageChain, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		results.setBounds(25, 95, 425, 369);		
-		
+		results.setBounds(25, 95, 425, 369);
+
 		Button btnCancel = new Button(shlMessageChain, SWT.NONE);
 		btnCancel.setBounds(456, 93, 75, 25);
 		btnCancel.setText("Cancel");
-		shlMessageChain.pack();
-		shlMessageChain.open();
 
 		Button btnClear = new Button(shlMessageChain, SWT.NONE);
 		btnClear.setBounds(456, 124, 75, 25);
 		btnClear.setText("Clear");
 		shlMessageChain.pack();
 		shlMessageChain.open();
-		
+
 		btnApply.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				try {
-					execute();
-				} catch (ExecutionException e) {
+				try {									
+					// Criando IProject para passar para a função analyseMethods
+					// Acha a raiz da workspace
+					String name = combo.getItem(combo.getSelectionIndex());
+					IWorkspace workspace = ResourcesPlugin.getWorkspace();
+					IWorkspaceRoot root = workspace.getRoot();
+
+					// Pega a raiz do projeto selecionado pelo usuário
+					IProject projectNew = root.getProject(name);
+					results.append("Name of project: " + projectNew.getName() + "\n");
+					results.append("Full Path of project: " + projectNew.getFullPath() + "\n");
+					projectNew.open(null);
+
+					// Chama a função para a análise do projeto
+					analyseMethods(projectNew);
+				} catch (CoreException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -233,7 +255,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 				dispose();
 			}
 		});
-		
+
 		btnClear.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				results.setText("");
@@ -245,14 +267,14 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	public void selectionChanged(IAction proxyAction, ISelection selection) {
 		// do nothing, action is not dependent on the selection
 	}
-	
+
 	// IWorkbenchWindowActionDelegate method
 	public void init(IWorkbenchWindow window) {
 		activeWindow = window;
 	}
-	
+
 	// IWorkbenchWindowActionDelegate method
 	public void dispose() {
-		//  nothing to do
+		// nothing to do
 	}
 }
