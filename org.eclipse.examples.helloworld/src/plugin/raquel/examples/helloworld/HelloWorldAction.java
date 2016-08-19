@@ -6,6 +6,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import plugin.raquel.examples.helloworld.ExpressionInvoke;
 
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
@@ -15,6 +16,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
@@ -44,9 +46,6 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	public Shell shlMessageChain;
 	private static Text results;
 
-	//private static final String JDT_NATURE = "org.eclipse.jdt.core.javanature";
-	// private StructuralPropertyDescriptor property;
-
 	/**
 	 * Lista os projetos da Workspace em utilização
 	 */
@@ -61,7 +60,20 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	 * @param project
 	 * @return
 	 */
-	public IClassFile[] getAllClass(IProject project) {
+	public IClassFile[] getAllClass(IProject projectAtual) {
+		 ArrayList<Class<?>> classList = new ArrayList<Class<?>>();
+		
+		for (IProject projects : projectAtual) {
+			IJavaProject javaProject = JavaCore.create(projects);
+			IPackageFragment[] packages = javaProject.getPackageFragments();
+
+			for (IPackageFragment myPackage : packages) {
+				IClassFile[] classes = myPackage.getClassFiles();
+				for (IClassFile myClass : classes) {
+					classList.add(myClass.getClass());
+				}
+			}
+		}
 		return null;
 	}
 
@@ -92,30 +104,10 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 			results.append("\nMessage Chain: " + s + "\n");
 			splitMessageChain(s);
 		} else {
-			//System.out.println("Não é Message Chain: " + s + "\n");
+			// System.out.println("Não é Message Chain: " + s + "\n");
 		}
 	}
 
-	/*public Object execute() throws ExecutionException {
-
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IWorkspaceRoot root = workspace.getRoot();
-
-		// Pega todos os projetos na workspace
-		IProject[] projects = root.getProjects();
-
-		// Faz um loop sobre todos os projetos e executa o método analyseMethods
-		for (IProject project : projects) {
-			try {
-				if (project.isNatureEnabled(JDT_NATURE)) {
-					analyseMethods(project);
-				}
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
-	} */
 
 	/*
 	 * private void analyseClass (IProject project) { //IProject class = root. }
@@ -126,21 +118,12 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		// parse(JavaCore.create(project));
 		for (IPackageFragment mypackage : packages) {
 			if (mypackage.getKind() == IPackageFragmentRoot.K_SOURCE) {
-				// System.out.println("####### INFORMAÇÕES DO METHOD DECLARATION
-				// DO PROJETO " + mypackage.getElementName());
-				// createASTmethod(mypackage);
-				/*if (mypackage.getElementName() != null) {
-					results.append("####### INFORMAÇÕES DO EXPRESSION STATEMENT DO PROJETO "
-							+ mypackage.getElementName() + " ########\n");
-				}*/
 				createASTInvocation(mypackage);
 			}
 		}
 	}
 
 	private void createASTInvocation(IPackageFragment mypackage) throws JavaModelException {
-		// mypackage.getClassFiles();
-
 		for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
 			// now create the AST for the ICompilationUnits
 			CompilationUnit parse = parse(unit);
@@ -149,12 +132,6 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 
 			// Imprime na tela o nome do método e o tipo de retorno
 			for (ExpressionStatement method : visitor.getMethods()) {
-				// System.out.println("\n\nNAME: " + method.getExpression());
-				// System.out.println("PARENT: " + method.getParent());
-				// System.out.println("ARGUMENTS: " + method.arguments());
-
-				// Converter o method.getParent() em string e avalia se é
-				// Message Chain
 				String t = null;
 				t = method.getExpression().toString();
 
@@ -183,7 +160,6 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	 */
 	public void run(IAction proxyAction) {
 		// proxyAction has UI information from manifest file (ignored)
-		// Shell shell = activeWindow.getShell();
 		shlMessageChain = new Shell();
 		shlMessageChain.setSize(547, 500);
 		shlMessageChain.setText("Message Chain");
@@ -194,21 +170,28 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		lblPleaseSelectThe.setBounds(25, 10, 394, 15);
 		lblPleaseSelectThe.setText("Message Chain: all methods in workspace!");
 
-		Combo combo = new Combo(shlMessageChain, SWT.NONE);
-		combo.setBounds(25, 46, 425, 23);
+		Combo comboProjects = new Combo(shlMessageChain, SWT.NONE);
+		comboProjects.setBounds(25, 27, 425, 23);
 
 		// Gets all projects from workspace
 		IProject[] projects = getAllProjects();
 		for (int i = 0; i < projects.length; i++) {
-			combo.add(projects[i].getName());
+			comboProjects.add(projects[i].getName());
 		}
 
-		combo.select(0);
+		comboProjects.select(0);
 
-		Button btnApply = new Button(shlMessageChain, SWT.NONE);
-		btnApply.setSelection(true);
-		btnApply.setBounds(456, 44, 75, 25);
-		btnApply.setText("Apply");
+		Button btnApplyProjects = new Button(shlMessageChain, SWT.NONE);
+		btnApplyProjects.setSelection(true);
+		btnApplyProjects.setBounds(456, 25, 75, 25);
+		btnApplyProjects.setText("Apply");
+
+		Combo comboClasses = new Combo(shlMessageChain, SWT.NONE);
+		comboClasses.setBounds(25, 56, 425, 23);
+
+		Button applyClass = new Button(shlMessageChain, SWT.NONE);
+		applyClass.setBounds(456, 56, 75, 25);
+		applyClass.setText("Apply");
 
 		results = new Text(shlMessageChain, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		results.setBounds(25, 95, 425, 369);
@@ -223,12 +206,12 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		shlMessageChain.pack();
 		shlMessageChain.open();
 
-		btnApply.addSelectionListener(new SelectionAdapter() {
+		btnApplyProjects.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				try {									
+				try {
 					// Criando IProject para passar para a função analyseMethods
 					// Acha a raiz da workspace
-					String name = combo.getItem(combo.getSelectionIndex());
+					String name = comboProjects.getItem(comboProjects.getSelectionIndex());
 					IWorkspace workspace = ResourcesPlugin.getWorkspace();
 					IWorkspaceRoot root = workspace.getRoot();
 
@@ -237,6 +220,9 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 					results.append("## NAME OF PROJECT: " + projectNew.getName() + "\n");
 					results.append("## PATH OF PROJECT: " + projectNew.getFullPath() + "\n");
 					projectNew.open(null);
+
+					// Gets all classes of project
+					// IClassFile[] classes = getAllClass(projectNew);
 
 					// Chama a função para a análise do projeto
 					analyseMethods(projectNew);
