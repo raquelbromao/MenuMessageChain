@@ -55,19 +55,19 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	 * Lista todas as classes do projeto selecionado
 	 * 
 	 * @param project
-	 * @return 
+	 * @return
 	 * @return
 	 */
-	private void getAllClasses(IProject p) throws JavaModelException {
+	/*private void getAllClasses(IProject p) throws JavaModelException {
 		IPackageFragment[] packages = JavaCore.create(p).getPackageFragments();
 		// parse(JavaCore.create(project));
 		for (IPackageFragment mypackage : packages) {
 			for (final ICompilationUnit compilationUnit : mypackage.getCompilationUnits()) {
-			       results.append("## PACKAGE NAME: " + mypackage.getElementName() + "\n");
-			       results.append("## COMPILATION UNIT NAME: " + compilationUnit.getElementName() + "\n");
+			       //results.append("## PACKAGE NAME: " + mypackage.getElementName() + "\n");
+			       results.append("## [CLASSE] COMPILATION UNIT NAME: " + compilationUnit.getElementName() + "\n");
 			}
 		}
-	}
+	}*/
 
 	public static void splitMessageChain(String s) {
 		// retira o ";" do final da string
@@ -85,7 +85,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 			results.append("Método[" + i + "]: " + aux[i] + "\n");
 		}
 
-		results.append("_______________________________________________________");
+		results.append("_______________________________________________________\n");
 	}
 
 	public static void verificaMessageChain(String s) {
@@ -130,6 +130,23 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 			}
 		}
 	}
+		
+	@SuppressWarnings("unused")
+	private void analyseClass(ICompilationUnit classe) throws JavaModelException {
+				ICompilationUnit unit = classe;
+				// now create the AST for the ICompilationUnits
+				CompilationUnit parse = parse(unit);
+				ExpressionInvoke visitor = new ExpressionInvoke();
+				parse.accept(visitor);
+
+				// Imprime na tela o nome do método e o tipo de retorno
+				for (ExpressionStatement method : visitor.getMethods()) {
+					String t = null;
+					t = method.getExpression().toString();
+
+					verificaMessageChain(t);
+				}
+	}
 
 	/**
 	 * Reads a ICompilationUnit and creates the AST DOM for manipulating the
@@ -147,7 +164,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	}
 
 	/**
-	 * Run the action. Display the Hello World message
+	 * Run the action. Display the plugin
 	 */
 	public void run(IAction proxyAction) {
 		// proxyAction has UI information from manifest file (ignored)
@@ -179,17 +196,10 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 
 		Combo comboClasses = new Combo(shlMessageChain, SWT.NONE);
 		comboClasses.setBounds(25, 56, 425, 23);
-		
-		// Get all classes from project
-		for () {
-			
-		}
-		
-		comboClasses.select(0);
 
-		Button applyClass = new Button(shlMessageChain, SWT.NONE);
-		applyClass.setBounds(456, 56, 75, 25);
-		applyClass.setText("Apply");
+		Button btnApplyClass = new Button(shlMessageChain, SWT.NONE);
+		btnApplyClass.setBounds(456, 56, 75, 25);
+		btnApplyClass.setText("Apply");
 
 		results = new Text(shlMessageChain, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		results.setBounds(25, 95, 425, 369);
@@ -209,18 +219,27 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 				try {
 					// Criando IProject para passar para a função analyseMethods
 					// Acha a raiz da workspace
-					String name = comboProjects.getItem(comboProjects.getSelectionIndex());
+					String nameProject = comboProjects.getItem(comboProjects.getSelectionIndex());
 					IWorkspace workspace = ResourcesPlugin.getWorkspace();
 					IWorkspaceRoot root = workspace.getRoot();
 
 					// Pega a raiz do projeto selecionado pelo usuário
-					IProject projectNew = root.getProject(name);
+					IProject projectNew = root.getProject(nameProject);
 					results.append("## NAME OF PROJECT: " + projectNew.getName() + "\n");
 					results.append("## PATH OF PROJECT: " + projectNew.getFullPath() + "\n");
 					projectNew.open(null);
-
-					// Gera a lista de todas as classes do projeto selecionado
-					getAllClasses(projectNew);
+					
+					// Gera a lista de todas as classes do projeto selecionado	
+					IPackageFragment[] packages = JavaCore.create(projectNew).getPackageFragments();					
+					for (IPackageFragment mypackage : packages) {
+						for (final ICompilationUnit compilationUnit : mypackage.getCompilationUnits()) {
+						       //results.append("## PACKAGE NAME: " + mypackage.getElementName() + "\n");
+								comboClasses.add(compilationUnit.getElementName());
+						       results.append("## [CLASSE] COMPILATION UNIT NAME: " + compilationUnit.getElementName() + "\n");
+						}
+					}
+					
+					comboClasses.select(0);
 
 					// Chama a função para a análise do projeto
 					analyseMethods(projectNew);
@@ -228,6 +247,12 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			}
+		});
+		
+		btnApplyClass.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				 //analyseClass(compilationUnit);
 			}
 		});
 
