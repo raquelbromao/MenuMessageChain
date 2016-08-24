@@ -1,6 +1,9 @@
 package plugin.raquel.examples.helloworld;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;
+//import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.window.ApplicationWindow;
 
@@ -17,9 +20,9 @@ import org.eclipse.swt.widgets.Text;
 
 public class Results extends ApplicationWindow {
 	private Text text;
-	IPackageFragment[] packagesSelection;
-	
-	public void recebeDados(IPackageFragment[] p) {
+	static IPackageFragment[] packagesSelection;
+
+	public static void Inicializa(IPackageFragment[] p) {
 		packagesSelection = p;
 	}
 
@@ -36,30 +39,55 @@ public class Results extends ApplicationWindow {
 
 	/**
 	 * Create contents of the application window.
+	 * 
 	 * @param parent
 	 */
 	@Override
 	protected Control createContents(Composite parent) {
 		Composite container = new Composite(parent, SWT.NONE);
-		
-		Combo combo = new Combo(container, SWT.NONE);
-		combo.setBounds(107, 7, 387, 23);
-		
+
+		Combo comboClasses = new Combo(container, SWT.NONE);
+		comboClasses.setBounds(107, 7, 387, 23);
+
+		// Gera a lista de todas as classes do projeto selecionado
+		// com o tipo IPackageFragment que obtenho todas as classes de um
+		// projeto
+		// IProject -> IPackageFragment -> ICompilationUnit -> arq.java
+		try {
+			for (IPackageFragment mypackage : packagesSelection) {
+				for (final ICompilationUnit compilationUnit : mypackage.getCompilationUnits()) {
+					comboClasses.add(compilationUnit.getElementName());
+					// results.append("## PACKAGE NAME: " +
+					// mypackage.getElementName() + "\n");
+					// results.append("## [CLASSE] COMPILATION UNIT NAME: " +
+					// compilationUnit.getElementName() + "\n");
+					// classSelection = compilationUnit;
+					// analyseClass(compilationUnit);
+				}
+			}
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// deixa a primeira classe encontrada visível por default no combo
+		comboClasses.select(0);
+
 		Label lblNewLabel = new Label(container, SWT.NONE);
 		lblNewLabel.setBounds(10, 10, 91, 15);
 		lblNewLabel.setText("Select the class:");
-		
+
 		Button btnApplyClass = new Button(container, SWT.NONE);
 		btnApplyClass.setBounds(500, 7, 75, 25);
 		btnApplyClass.setText("Apply");
-		
+
 		text = new Text(container, SWT.BORDER);
 		text.setBounds(10, 49, 484, 334);
-		
+
 		Button btnCancel = new Button(container, SWT.NONE);
 		btnCancel.setText("Cancel");
 		btnCancel.setBounds(500, 80, 75, 25);
-		
+
 		Button btnClear = new Button(container, SWT.NONE);
 		btnClear.setText("Clear");
 		btnClear.setBounds(500, 49, 75, 25);
@@ -73,9 +101,10 @@ public class Results extends ApplicationWindow {
 	private void createActions() {
 		// Create the actions
 	}
-	
+
 	/**
 	 * Create the status line manager.
+	 * 
 	 * @return the status line manager
 	 */
 	@Override
@@ -86,9 +115,10 @@ public class Results extends ApplicationWindow {
 
 	/**
 	 * Launch the application.
+	 * 
 	 * @param args
 	 */
-	public static void main(String args[]) {
+	public static void main(String args[], IPackageFragment[] p) {
 		try {
 			Results window = new Results();
 			window.setBlockOnOpen(true);
@@ -97,10 +127,12 @@ public class Results extends ApplicationWindow {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		Inicializa(p);
 	}
 
 	/**
 	 * Configure the shell.
+	 * 
 	 * @param newShell
 	 */
 	@Override
