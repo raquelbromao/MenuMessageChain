@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
@@ -43,7 +42,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	IWorkbenchWindow activeWindow = null;
 	public Shell shlMessageChain;
 	private static Text results;
-	IProject projectNew;
+	IProject projectSelection;
 	IPackageFragment[] packagesSelection;
 
 	/**
@@ -77,11 +76,11 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		// verifica se a expressão coletada é igual ao regex criado
 		// não foi usado [;] no final do regex pq o compilador nem lê se não
 		// houver ele no final
-		if (s.matches("[\\w]+([\\.]+[\\w]+[(]+[)]){2,}")) {
+		if (s.matches("[\\w]+([\\.]+[\\w]+[(]+[)]){2,}")) { //"[\\w]+([\\.]+[\\w]+[(]+[?\\w]+[)]){2,}")
 			results.append("\nMessage Chain: " + s + "\n");
 			splitMessageChain(s);
 		} else {
-			results.append("\nNão é Message Chain: " + s + "\n");
+			results.append("\nNão é Message Chain: " + s + "\n_______________________________________________________\n");
 		}
 	}
 
@@ -89,6 +88,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	 * private void analyseClass (IProject project) { //IProject class = root. }
 	 * 
 	 */
+	@SuppressWarnings("unused")
 	private void analyseMethods(IProject project) throws JavaModelException {
 		IPackageFragment[] packages = JavaCore.create(project).getPackageFragments();
 		// parse(JavaCore.create(project));
@@ -117,9 +117,9 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	}
 		
 	private void analyseClass(ICompilationUnit classe) throws JavaModelException {
-				ICompilationUnit unit = classe;
+				//ICompilationUnit unit = classe;
 				// now create the AST for the ICompilationUnits
-				CompilationUnit parse = parse(unit);
+				CompilationUnit parse = parse(classe);
 				ExpressionInvoke visitor = new ExpressionInvoke();
 				parse.accept(visitor);
 
@@ -206,36 +206,34 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 					
 					// Criando IProject para passar para a função analyseMethods
 					// Acha a raiz da workspace
+					// Using the following code you can load all the projects in the workspace.
 					String nameProject = comboProjects.getItem(comboProjects.getSelectionIndex());
 					IWorkspace workspace = ResourcesPlugin.getWorkspace();
 					IWorkspaceRoot root = workspace.getRoot();
 
 					// Pega a raiz do projeto selecionado pelo usuário
-					projectNew = root.getProject(nameProject);
-					results.append("## NAME OF PROJECT: " + projectNew.getName() + "\n");
-					results.append("## PATH OF PROJECT: " + projectNew.getFullPath() + "\n");
-					projectNew.open(null);
+					projectSelection = root.getProject(nameProject);
+					results.append("## NAME OF PROJECT: " + projectSelection.getName() + "\n");
+					results.append("## PATH OF PROJECT: " + projectSelection.getFullPath() + "\n");
+					projectSelection.open(null);
 					
 					// Gera a lista de todas as classes do projeto selecionado	
 					// com o tipo IPackageFragment que obtenho todas as classes de um projeto
-					IPackageFragment[] packagesSelection = JavaCore.create(projectNew).getPackageFragments();		
-					
+					// Then you can get packages and in turn the java files.
+					packagesSelection = JavaCore.create(projectSelection).getPackageFragments();	
+		
 					for (IPackageFragment mypackage : packagesSelection) {
 						for (final ICompilationUnit compilationUnit : mypackage.getCompilationUnits()) {
-						       //results.append("## PACKAGE NAME: " + mypackage.getElementName() + "\n");
-								comboClasses.add(compilationUnit.getElementName());
-						       results.append("## [CLASSE] COMPILATION UNIT NAME: " + compilationUnit.getElementName() + "\n");
-						       analyseClass(compilationUnit);
+							   comboClasses.add(compilationUnit.getElementName());
+						       results.append("## PACKAGE NAME: " + mypackage.getElementName() + "\n");							   
+						       results.append("## [CLASSE] COMPILATION UNIT NAME: " + compilationUnit.getElementName() + "\n");						       
+						       //classSelection = compilationUnit;
+						       //analyseClass(compilationUnit);
 						}
 					}
 					
-					results.append("\n\n");
-					
 					// deixa a primeira classe visível no combo
-					comboClasses.select(0);
-
-					// Chama a função para a análise do projeto
-					//analyseMethods(projectNew);
+					comboClasses.select(0);	
 				} catch (CoreException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -245,23 +243,26 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		
 		btnApplyClass.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				// Pega a classe selecionada no combo
-				String nameClass = comboClasses.getItem(comboClasses.getSelectionIndex());
-				ICompilationUnit selecao = null;
-				
 				try {
-					IPackageFragment[] packages = JavaCore.create(projectNew).getPackageFragments();					
-					selecao.getType(nameClass);
+				String nameClass = comboClasses.getItem(comboClasses.getSelectionIndex());
 				
-					
-					//analyseClass(selecao);
-					
+				for (IPackageFragment mypackage : packagesSelection) {					
+						for (final ICompilationUnit compilationUnit : mypackage.getCompilationUnits()) {
+							   String aux =  compilationUnit.getElementName();
+							   if (aux.equals(nameClass)) {
+								   analyseClass(compilationUnit);
+							   }
+						}
+				}
+				
 				} catch (JavaModelException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}					
+
 			}
 		});
+
 
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
