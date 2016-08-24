@@ -217,6 +217,9 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		btnApplyProjects.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				try {
+					//remove todas as classes do projeto escolhido anteriormente
+					comboClasses.removeAll();
+					
 					// Criando IProject para passar para a função analyseMethods
 					// Acha a raiz da workspace
 					String nameProject = comboProjects.getItem(comboProjects.getSelectionIndex());
@@ -230,6 +233,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 					projectNew.open(null);
 					
 					// Gera a lista de todas as classes do projeto selecionado	
+					// com o tipo IPackageFragment que obtenho todas as classes de um projeto
 					IPackageFragment[] packages = JavaCore.create(projectNew).getPackageFragments();					
 					for (IPackageFragment mypackage : packages) {
 						for (final ICompilationUnit compilationUnit : mypackage.getCompilationUnits()) {
