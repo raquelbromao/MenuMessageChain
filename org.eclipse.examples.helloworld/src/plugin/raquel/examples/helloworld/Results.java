@@ -1,6 +1,11 @@
 package plugin.raquel.examples.helloworld;
 
+import plugin.raquel.examples.helloworld.ExpressionInvoke;
+
 import java.util.regex.Pattern;
+
+import org.eclipse.jface.action.StatusLineManager;
+import org.eclipse.jface.window.ApplicationWindow;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -10,9 +15,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.ExpressionStatement;
-//import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jface.action.StatusLineManager;
-import org.eclipse.jface.window.ApplicationWindow;
+import org.eclipse.jdt.core.JavaCore;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
