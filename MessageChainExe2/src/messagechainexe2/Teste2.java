@@ -87,6 +87,10 @@ public class Teste2 extends Dialog {
 		Button btnNewButton_2 = new Button(shell, SWT.NONE);
 		btnNewButton_2.setBounds(456, 124, 75, 25);
 		btnNewButton_2.setText("Clear");
+		
+		Button btnTeste = new Button(shell, SWT.NONE);
+		btnTeste.setText("Teste");
+		btnTeste.setBounds(456, 155, 75, 25);
 
 	}
 }
