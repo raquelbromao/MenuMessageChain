@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Text;
 public class Results extends ApplicationWindow {
 	private static Text results;
 	static IPackageFragment[] packagesSelection;
+	static Results window;
 
 	public static void Inicializa(IPackageFragment[] p) {
 		packagesSelection = p;
@@ -193,7 +194,7 @@ public class Results extends ApplicationWindow {
 
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
-				close();
+				window.close(); 
 			}
 		});
 
