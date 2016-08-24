@@ -1,9 +1,9 @@
 package plugin.raquel.examples.helloworld;
 
-import plugin.raquel.examples.helloworld.ExpressionInvoke;
+//import plugin.raquel.examples.helloworld.ExpressionInvoke;
 import plugin.raquel.examples.helloworld.Results;
 
-import java.util.regex.Pattern;
+//import java.util.regex.Pattern;
 
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
@@ -15,15 +15,15 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
-import org.eclipse.jdt.core.ICompilationUnit;
+//import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;
 //import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
+/*import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.ExpressionStatement;
+import org.eclipse.jdt.core.dom.ExpressionStatement;*/
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -35,7 +35,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+//import org.eclipse.swt.widgets.Text;
 
 /**
  * HelloWorldAction is a simple example of using an action set to extend the
@@ -45,7 +45,7 @@ import org.eclipse.swt.widgets.Text;
 public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	IWorkbenchWindow activeWindow = null;
 	public Shell shlMessageChain;
-	private static Text results;
+	//private static Text results;
 	IProject projectSelection;
 	IPackageFragment[] packagesSelection;
 
@@ -57,7 +57,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		return projects;
 	}
 
-	public static void splitMessageChain(String s) {
+	/*public static void splitMessageChain(String s) {
 		// retira o ";" do final da string
 		s = s.replace(";", " ");
 
@@ -74,9 +74,9 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		}
 
 		results.append("_______________________________________________________\n");
-	}
+	}*/
 
-	public static void verificaMessageChain(String s) {
+	/*public static void verificaMessageChain(String s) {
 		// verifica se a expressão coletada é igual ao regex criado
 		// não foi usado [;] no final do regex pq o compilador nem lê se não
 		// houver ele no final
@@ -86,9 +86,9 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		} else {
 			results.append("\nNão é Message Chain: " + s + "\n_______________________________________________________\n");
 		}
-	}
+	}*/
 
-	private void analyseClass(ICompilationUnit classe) throws JavaModelException {
+	/*private void analyseClass(ICompilationUnit classe) throws JavaModelException {
 		// ICompilationUnit unit = classe;
 		// now create the AST for the ICompilationUnits
 		CompilationUnit parse = parse(classe);
@@ -102,7 +102,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 
 			verificaMessageChain(t);
 		}
-	}
+	}*/
 
 	/**
 	 * Reads a ICompilationUnit and creates the AST DOM for manipulating the
@@ -111,13 +111,13 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	 * @param unit
 	 * @return
 	 */
-	private static CompilationUnit parse(ICompilationUnit unit) {
+	/*private static CompilationUnit parse(ICompilationUnit unit) {
 		ASTParser parser = ASTParser.newParser(AST.JLS8);
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setSource(unit);
 		parser.setResolveBindings(true);
 		return (CompilationUnit) parser.createAST(null); // parse
-	}
+	}*/
 
 	/**
 	 * Run the action. Display the plugin
@@ -125,14 +125,14 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 	public void run(IAction proxyAction) {
 		// proxyAction has UI information from manifest file (ignored)
 		shlMessageChain = new Shell();
-		shlMessageChain.setSize(547, 500);
+		shlMessageChain.setSize(547, 300);
 		shlMessageChain.setText("Message Chain Plugin");
 		shlMessageChain.setLayout(null);
 
-		Label lblPleaseSelectThe = new Label(shlMessageChain, SWT.NONE);
-		lblPleaseSelectThe.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
-		lblPleaseSelectThe.setBounds(25, 10, 394, 15);
-		lblPleaseSelectThe.setText("Message Chain: all methods in workspace!");
+		Label lbl = new Label(shlMessageChain, SWT.NONE);
+		lbl.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
+		lbl.setBounds(25, 10, 394, 15);
+		lbl.setText("Message Chain: all methods in workspace!");
 
 		Combo comboProjects = new Combo(shlMessageChain, SWT.NONE);
 		comboProjects.setBounds(25, 27, 425, 23);
@@ -150,27 +150,17 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		btnApplyProjects.setBounds(456, 25, 75, 25);
 		btnApplyProjects.setText("Apply");
 
-		Combo comboClasses = new Combo(shlMessageChain, SWT.NONE);
-		comboClasses.setBounds(25, 56, 425, 23);
-
-		Button btnApplyClass = new Button(shlMessageChain, SWT.NONE);
-		btnApplyClass.setBounds(456, 56, 75, 25);
-		btnApplyClass.setText("Apply");
-
-		results = new Text(shlMessageChain, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
-		results.setBounds(25, 95, 425, 369);
-
 		Button btnCancel = new Button(shlMessageChain, SWT.NONE);
-		btnCancel.setBounds(456, 93, 75, 25);
+		btnCancel.setBounds(456, 50, 75, 25);
 		btnCancel.setText("Cancel");
 
-		Button btnClear = new Button(shlMessageChain, SWT.NONE);
+		/*Button btnClear = new Button(shlMessageChain, SWT.NONE);
 		btnClear.setBounds(456, 124, 75, 25);
-		btnClear.setText("Clear");
+		btnClear.setText("Clear");*/
 		
-		Button btnTeste = new Button(shlMessageChain, SWT.NONE);
+		/*Button btnTeste = new Button(shlMessageChain, SWT.NONE);
 		btnTeste.setText("Teste");
-		btnTeste.setBounds(456, 155, 75, 25);
+		btnTeste.setBounds(456, 155, 75, 25);*/
 		
 		shlMessageChain.pack();
 		shlMessageChain.open();
@@ -179,9 +169,9 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 			public void widgetSelected(SelectionEvent event) {
 				try {
 					// remove todas as classes do projeto escolhido anteriormente
-					comboClasses.removeAll();
+					//comboClasses.removeAll();
 					// LIMPA A JANELA DOS RESULTADOS QUANDO SELECIONADO UM NOVO PROJETO
-					results.setText("");
+					//results.setText("");
 
 					// Acha a raiz da workspace para criar/carregar o IProject selecionado pelo usuário
 					String nameProject = comboProjects.getItem(comboProjects.getSelectionIndex());
@@ -199,18 +189,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 					// IProject -> IPackageFragment -> ICompilationUnit -> arq.java
 					packagesSelection = JavaCore.create(projectSelection).getPackageFragments();
 
-					for (IPackageFragment mypackage : packagesSelection) {
-						for (final ICompilationUnit compilationUnit : mypackage.getCompilationUnits()) {
-							comboClasses.add(compilationUnit.getElementName());
-							//results.append("## PACKAGE NAME: " + mypackage.getElementName() + "\n");
-							//results.append("## [CLASSE] COMPILATION UNIT NAME: " + compilationUnit.getElementName() + "\n");
-							// classSelection = compilationUnit;
-							// analyseClass(compilationUnit);
-						}
-					}
-
-					// deixa a primeira classe encontrada visível por default no combo
-					comboClasses.select(0);
+					Results.main(null,packagesSelection);
 				} catch (CoreException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -218,7 +197,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 			}
 		});
 
-		btnApplyClass.addSelectionListener(new SelectionAdapter() {
+		/*btnApplyClass.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				try {
 					// LIMPA A JANELA DOS RESULTADOS QUANDO SELECIONADO UMA NOVA CLASSE
@@ -240,7 +219,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 				}
 
 			}
-		});
+		});*/
 
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
@@ -249,17 +228,17 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 			}
 		});
 
-		btnClear.addSelectionListener(new SelectionAdapter() {
+		/*btnClear.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				results.setText("");
 			}
-		});
+		});*/
 		
-		btnTeste.addSelectionListener(new SelectionAdapter() {
+		/*btnTeste.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {							      
 				Results.main(null,packagesSelection);
 			}
-		});
+		});*/
 	}
 
 	// IActionDelegate method
