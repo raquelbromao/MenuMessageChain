@@ -1,18 +1,19 @@
 package plugin.raquel.examples.helloworld;
 
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.wb.swt.SWTResourceManager;
-
 import plugin.raquel.examples.helloworld.ExpressionInvoke;
 
 import java.util.regex.Pattern;
+
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -22,8 +23,10 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.ExpressionStatement;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -76,7 +79,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		// verifica se a expressão coletada é igual ao regex criado
 		// não foi usado [;] no final do regex pq o compilador nem lê se não
 		// houver ele no final
-		if (s.matches("[\\w]+([\\.]+[\\w]+[(]+[)]){2,}")) { //"[\\w]+([\\.]+[\\w]+[(]+[?\\w]+[)]){2,}")
+		if (s.matches("[\\w]+([\\.]+[\\w]+[(]+[)]){2,}")) { // "[\\w]+([\\.]+[\\w]+[(]+[?\\w]+[)]){2,}")
 			results.append("\nMessage Chain: " + s + "\n");
 			splitMessageChain(s);
 		} else {
@@ -115,21 +118,21 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 			}
 		}
 	}
-		
+
 	private void analyseClass(ICompilationUnit classe) throws JavaModelException {
-				//ICompilationUnit unit = classe;
-				// now create the AST for the ICompilationUnits
-				CompilationUnit parse = parse(classe);
-				ExpressionInvoke visitor = new ExpressionInvoke();
-				parse.accept(visitor);
+		// ICompilationUnit unit = classe;
+		// now create the AST for the ICompilationUnits
+		CompilationUnit parse = parse(classe);
+		ExpressionInvoke visitor = new ExpressionInvoke();
+		parse.accept(visitor);
 
-				// Imprime na tela o nome do método e o tipo de retorno
-				for (ExpressionStatement method : visitor.getMethods()) {
-					String t = null;
-					t = method.getExpression().toString();
+		// Imprime na tela o nome do método e o tipo de retorno
+		for (ExpressionStatement method : visitor.getMethods()) {
+			String t = null;
+			t = method.getExpression().toString();
 
-					verificaMessageChain(t);
-				}
+			verificaMessageChain(t);
+		}
 	}
 
 	/**
@@ -203,66 +206,67 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 				try {
 					// remove todas as classes do projeto escolhido anteriormente
 					comboClasses.removeAll();
-					
-					// Criando IProject para passar para a função analyseMethods
-					// Acha a raiz da workspace
-					// Using the following code you can load all the projects in the workspace.
+					// LIMPA A JANELA DOS RESULTADOS QUANDO SELECIONADO UM NOVO PROJETO
+					results.setText("");
+
+					// Acha a raiz da workspace para criar/carregar o IProject selecionado pelo usuário
 					String nameProject = comboProjects.getItem(comboProjects.getSelectionIndex());
 					IWorkspace workspace = ResourcesPlugin.getWorkspace();
 					IWorkspaceRoot root = workspace.getRoot();
 
 					// Pega a raiz do projeto selecionado pelo usuário
 					projectSelection = root.getProject(nameProject);
-					results.append("## NAME OF PROJECT: " + projectSelection.getName() + "\n");
-					results.append("## PATH OF PROJECT: " + projectSelection.getFullPath() + "\n");
+					//results.append("## NAME OF PROJECT: " + projectSelection.getName() + "\n");
+					//results.append("## PATH OF PROJECT: " + projectSelection.getFullPath() + "\n");
 					projectSelection.open(null);
-					
-					// Gera a lista de todas as classes do projeto selecionado	
+
+					// Gera a lista de todas as classes do projeto selecionado
 					// com o tipo IPackageFragment que obtenho todas as classes de um projeto
-					// Then you can get packages and in turn the java files.
-					packagesSelection = JavaCore.create(projectSelection).getPackageFragments();	
-		
+					// IProject -> IPackageFragment -> ICompilationUnit -> arq.java
+					packagesSelection = JavaCore.create(projectSelection).getPackageFragments();
+
 					for (IPackageFragment mypackage : packagesSelection) {
 						for (final ICompilationUnit compilationUnit : mypackage.getCompilationUnits()) {
-							   comboClasses.add(compilationUnit.getElementName());
-						       results.append("## PACKAGE NAME: " + mypackage.getElementName() + "\n");							   
-						       results.append("## [CLASSE] COMPILATION UNIT NAME: " + compilationUnit.getElementName() + "\n");						       
-						       //classSelection = compilationUnit;
-						       //analyseClass(compilationUnit);
+							comboClasses.add(compilationUnit.getElementName());
+							//results.append("## PACKAGE NAME: " + mypackage.getElementName() + "\n");
+							//results.append("## [CLASSE] COMPILATION UNIT NAME: " + compilationUnit.getElementName() + "\n");
+							// classSelection = compilationUnit;
+							// analyseClass(compilationUnit);
 						}
 					}
-					
-					// deixa a primeira classe visível no combo
-					comboClasses.select(0);	
+
+					// deixa a primeira classe encontrada visível por default no combo
+					comboClasses.select(0);
 				} catch (CoreException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		});
-		
+
 		btnApplyClass.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				try {
-				String nameClass = comboClasses.getItem(comboClasses.getSelectionIndex());
-				
-				for (IPackageFragment mypackage : packagesSelection) {					
+					// LIMPA A JANELA DOS RESULTADOS QUANDO SELECIONADO UMA NOVA CLASSE
+					results.setText("");
+					String nameClass = comboClasses.getItem(comboClasses.getSelectionIndex());
+
+					for (IPackageFragment mypackage : packagesSelection) {
 						for (final ICompilationUnit compilationUnit : mypackage.getCompilationUnits()) {
-							   String aux =  compilationUnit.getElementName();
-							   if (aux.equals(nameClass)) {
-								   analyseClass(compilationUnit);
-							   }
+							String aux = compilationUnit.getElementName();
+							if (aux.equals(nameClass)) {
+								analyseClass(compilationUnit);
+							}
 						}
-				}
-				
+					}
+
 				} catch (JavaModelException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}					
+				}
 
 			}
 		});
-
 
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
