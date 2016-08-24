@@ -1,6 +1,7 @@
 package plugin.raquel.examples.helloworld;
 
 import plugin.raquel.examples.helloworld.ExpressionInvoke;
+import plugin.raquel.examples.helloworld.Results;
 
 import java.util.regex.Pattern;
 
@@ -87,38 +88,6 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		}
 	}
 
-	/*
-	 * private void analyseClass (IProject project) { //IProject class = root. }
-	 * 
-	 */
-	@SuppressWarnings("unused")
-	private void analyseMethods(IProject project) throws JavaModelException {
-		IPackageFragment[] packages = JavaCore.create(project).getPackageFragments();
-		// parse(JavaCore.create(project));
-		for (IPackageFragment mypackage : packages) {
-			if (mypackage.getKind() == IPackageFragmentRoot.K_SOURCE) {
-				createASTInvocation(mypackage);
-			}
-		}
-	}
-
-	private void createASTInvocation(IPackageFragment mypackage) throws JavaModelException {
-		for (ICompilationUnit unit : mypackage.getCompilationUnits()) {
-			// now create the AST for the ICompilationUnits
-			CompilationUnit parse = parse(unit);
-			ExpressionInvoke visitor = new ExpressionInvoke();
-			parse.accept(visitor);
-
-			// Imprime na tela o nome do método e o tipo de retorno
-			for (ExpressionStatement method : visitor.getMethods()) {
-				String t = null;
-				t = method.getExpression().toString();
-
-				verificaMessageChain(t);
-			}
-		}
-	}
-
 	private void analyseClass(ICompilationUnit classe) throws JavaModelException {
 		// ICompilationUnit unit = classe;
 		// now create the AST for the ICompilationUnits
@@ -157,7 +126,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		// proxyAction has UI information from manifest file (ignored)
 		shlMessageChain = new Shell();
 		shlMessageChain.setSize(547, 500);
-		shlMessageChain.setText("Message Chain");
+		shlMessageChain.setText("Message Chain Plugin");
 		shlMessageChain.setLayout(null);
 
 		Label lblPleaseSelectThe = new Label(shlMessageChain, SWT.NONE);
@@ -198,6 +167,11 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		Button btnClear = new Button(shlMessageChain, SWT.NONE);
 		btnClear.setBounds(456, 124, 75, 25);
 		btnClear.setText("Clear");
+		
+		Button btnTeste = new Button(shlMessageChain, SWT.NONE);
+		btnTeste.setText("Teste");
+		btnTeste.setBounds(456, 155, 75, 25);
+		
 		shlMessageChain.pack();
 		shlMessageChain.open();
 
@@ -208,9 +182,6 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 					comboClasses.removeAll();
 					// LIMPA A JANELA DOS RESULTADOS QUANDO SELECIONADO UM NOVO PROJETO
 					results.setText("");
-					
-				    //Results frame = new Results();  				      
-				    //frame.setVisible(true);  
 
 					// Acha a raiz da workspace para criar/carregar o IProject selecionado pelo usuário
 					String nameProject = comboProjects.getItem(comboProjects.getSelectionIndex());
@@ -281,6 +252,12 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		btnClear.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				results.setText("");
+			}
+		});
+		
+		btnTeste.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {							      
+				Results.main(null);
 			}
 		});
 	}
