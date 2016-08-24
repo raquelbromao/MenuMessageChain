@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.CoreException;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
+//import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
@@ -257,7 +257,7 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 		
 		btnTeste.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {							      
-				Results.main(null);
+				Results.main(null,packagesSelection);
 			}
 		});
 	}
