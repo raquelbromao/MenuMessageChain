@@ -208,6 +208,9 @@ public class HelloWorldAction implements IWorkbenchWindowActionDelegate {
 					comboClasses.removeAll();
 					// LIMPA A JANELA DOS RESULTADOS QUANDO SELECIONADO UM NOVO PROJETO
 					results.setText("");
+					
+				    //Results frame = new Results();  				      
+				    //frame.setVisible(true);  
 
 					// Acha a raiz da workspace para criar/carregar o IProject selecionado pelo usuário
 					String nameProject = comboProjects.getItem(comboProjects.getSelectionIndex());
